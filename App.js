@@ -1,21 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NativeBaseProvider, extendTheme } from "native-base";
+import Container from "./src/screens/Container";
 
 export default function App() {
+  const customeColor = {
+    primary: {
+      50: "#fff1f2",
+      100: "#ffe4e6",
+      200: "#fecdd3",
+      300: "#fda4af",
+      400: "#fb7185",
+      500: "#f43f5e",
+      600: "#e11d48",
+      700: "#be123c",
+      800: "#9f1239",
+      900: "#881337",
+    },
+    amber: {
+      400: "#db2777",
+    },
+  };
+
+  const theme = extendTheme({
+    colors: customeColor,
+  });
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NativeBaseProvider theme={theme}>
+      <Container />
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
