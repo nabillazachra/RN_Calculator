@@ -1,6 +1,8 @@
 import React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import Container from "./src/screens/Container";
+import Todo from "./src/screens/Todo";
+import Navigation from "./Navigation";
 
 export default function App() {
   const customeColor = {
@@ -26,7 +28,7 @@ export default function App() {
   });
   return (
     <NativeBaseProvider theme={theme}>
-      <Container />
+      <Navigation />
     </NativeBaseProvider>
   );
 }
