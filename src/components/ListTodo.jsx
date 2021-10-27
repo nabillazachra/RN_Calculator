@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
-import { List, Box, Text, HStack } from "native-base";
+import { List, Box, Text, HStack, Flex, Center } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import AddTodo from "../screens/AddTodo";
 
@@ -11,11 +15,10 @@ export default function ListTodo() {
   const url = "http://192.168.1.11:4000/api/v1/";
   const [todo, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     getTodos();
-  }, [reload]);
+  }, []);
 
   const getTodos = () => {
     setIsLoading(true);
@@ -38,7 +41,8 @@ export default function ListTodo() {
       };
 
       const response = await axios.patch(`${url}/todo/${id}`, done);
-      setReload(true);
+      setIsLoading(true);
+      getTodos();
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +55,18 @@ export default function ListTodo() {
       };
 
       const response = await axios.patch(`${url}/todo/${id}`, notDone);
-      setReload(true);
+      setIsLoading(true);
+      getTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    try {
+      const response = await axios.delete(`${url}/todo/${id}`);
+      setIsLoading(true);
+      getTodos();
     } catch (error) {
       console.log(error);
     }
@@ -67,20 +82,33 @@ export default function ListTodo() {
         borderRadius={10}
       >
         <List.Item onPress={() => navigation.navigate("DetailTodo", item)}>
-          <HStack space={6} alignSelf="flex-start" w="100%">
+          <HStack direction="row" space={10}>
+            {item.status === "Done" ? (
+              <HStack>
+                <MaterialCommunityIcons
+                  onPress={() => handleNotDone(item.id)}
+                  name="close-box-outline"
+                  size={24}
+                  color="navy"
+                />
+                <MaterialIcons
+                  onPress={() => deleteTodo(item.id)}
+                  name="delete-forever"
+                  size={24}
+                  color="red"
+                />
+              </HStack>
+            ) : (
+              <HStack align="rigth">
+                <FontAwesome
+                  onPress={() => handleDone(item.id)}
+                  name="check-square-o"
+                  size={24}
+                  color="green"
+                />
+              </HStack>
+            )}
             <Text>{item.title}</Text>
-            <FontAwesome
-              onPress={() => handleDone(item.id)}
-              name="check-square-o"
-              size={24}
-              color="green"
-            />
-            <MaterialCommunityIcons
-              onPress={() => handleNotDone(item.id)}
-              name="close-box-outline"
-              size={24}
-              color="red"
-            />
           </HStack>
         </List.Item>
       </List>
@@ -92,7 +120,7 @@ export default function ListTodo() {
       <Text color="primary.500" mb={2} fontWeight="bold">
         LIST TODO
       </Text>
-      <AddTodo />
+      <AddTodo getTodos={getTodos} />
       <FlatList
         data={todo}
         renderItem={_renderItem}

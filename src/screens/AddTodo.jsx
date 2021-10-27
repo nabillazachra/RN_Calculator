@@ -2,7 +2,7 @@ import axios from "axios";
 import { Button, Modal, FormControl, Input, Alert } from "native-base";
 import React, { useState } from "react";
 
-export default function AddTodo(props) {
+export default function AddTodo({ getTodos }) {
   const url = "http://192.168.1.11:4000/api/v1/";
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -13,18 +13,19 @@ export default function AddTodo(props) {
       if (!title.trim || !description.trim) {
         return <Alert>You need to fill the field</Alert>;
       }
+
+      const data = {
+        title,
+        description,
+      };
+
+      const response = await axios.post(`${url}/todo`, data);
+      setTitle("");
+      setDescription("");
+      getTodos();
     } catch (error) {
       console.log(error);
     }
-
-    const data = {
-      title,
-      description,
-    };
-
-    const response = await axios.post(`${url}/todo`, data);
-    setTitle("");
-    setDescription("");
   };
 
   const onPressButton = () => {
