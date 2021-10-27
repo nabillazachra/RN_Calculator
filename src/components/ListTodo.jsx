@@ -51,7 +51,7 @@ export default function ListTodo() {
   const handleNotDone = async (id) => {
     try {
       let notDone = {
-        status: "Cancel",
+        status: "Not done",
       };
 
       const response = await axios.patch(`${url}/todo/${id}`, notDone);
