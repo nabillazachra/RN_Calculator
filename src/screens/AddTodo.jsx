@@ -6,10 +6,11 @@ export default function AddTodo(props) {
   const url = "http://192.168.1.11:4000/api/v1/";
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = async () => {
     try {
-      if (!title.trim) {
+      if (!title.trim || !description.trim) {
         return <Alert>You need to fill the field</Alert>;
       }
     } catch (error) {
@@ -18,10 +19,12 @@ export default function AddTodo(props) {
 
     const data = {
       title,
+      description,
     };
 
     const response = await axios.post(`${url}/todo`, data);
     setTitle("");
+    setDescription("");
   };
 
   const onPressButton = () => {
@@ -44,6 +47,15 @@ export default function AddTodo(props) {
                 value={title}
                 autoFocus={true}
                 onChangeText={(nextValue) => setTitle(nextValue)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Description</FormControl.Label>
+              <Input
+                placeholder="Input your Description"
+                value={description}
+                autoFocus={true}
+                onChangeText={(descValue) => setDescription(descValue)}
               />
             </FormControl>
           </Modal.Body>
